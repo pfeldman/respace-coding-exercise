@@ -41,6 +41,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <Layout>
           <div>
             <Head>
+              <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1"
+              />
               <title>ExpertzRUs</title>
               <meta name="description" content="ExpertzRUs Demo App" />
               <link rel="icon" href="/favicon.ico" />
