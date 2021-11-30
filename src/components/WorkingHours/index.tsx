@@ -1,11 +1,17 @@
 import { Box, Checkbox, Typography } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
 import { PaperCard } from 'components/PaperCard'
 import { DayOfWeek } from 'components/WorkingHours/components/DayOfWeek'
 import { useWorkingHours } from 'hooks/useWorkingHours'
 import { TimeRange } from 'components/WorkingHours/components/TimeRange'
+import { PriceSelector } from 'components/WorkingHours/components/PriceSelector'
+import { useDefaultPricing } from 'hooks/useDefaultPricing'
+import { useData } from 'hooks/useData'
 
 export const WorkingHours = () => {
   const { workingHours, setWorkingHours } = useWorkingHours()
+  const { defaultPrice } = useDefaultPricing()
+  const { save, loading } = useData()
 
   const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
   const daysOfWeekName = [
@@ -85,10 +91,22 @@ export const WorkingHours = () => {
     setWorkingHours?.(newWorkingHours)
   }
 
+  const handleSpecialPrice = (
+    day: string,
+    index: number,
+    price: number = parseFloat(defaultPrice ?? '0')
+  ) => {
+    const newWorkingHours = { ...workingHours }
+    newWorkingHours[day][index].price = price
+
+    setWorkingHours?.(newWorkingHours)
+  }
+
   return (
     <PaperCard size={8} title="Working Hours" isMain>
       <Box>
         <Box>
+          <PriceSelector />
           <Typography sx={{ mb: 1.5 }} color="primary.textContrast">
             Please select which days and time are you available:
           </Typography>
@@ -141,8 +159,12 @@ export const WorkingHours = () => {
                             onChange={(start, end) =>
                               handleTimeChange(day, index, start, end)
                             }
+                            specialPrice={workingHours[day][index].price}
                             deletable={index > 0}
                             onRemove={() => handleRemove(day, index)}
+                            onAddSpecialPrice={(value?: number) =>
+                              handleSpecialPrice(day, index, value)
+                            }
                           />
                         )
                       })}
@@ -152,6 +174,20 @@ export const WorkingHours = () => {
               })}
             </Box>
           </Box>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'right',
+          }}
+        >
+          <LoadingButton
+            variant="contained"
+            loading={loading}
+            onClick={() => save()}
+          >
+            Save
+          </LoadingButton>
         </Box>
       </Box>
     </PaperCard>

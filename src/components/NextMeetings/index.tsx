@@ -13,7 +13,7 @@ export const NextMeetings = () => {
         }}
       >
         <Typography sx={{ fontSize: 14 }} color="primary.50" gutterBottom>
-          There are no future events yet.
+          There are no upcoming events.
         </Typography>
       </Box>
     </PaperCard>
