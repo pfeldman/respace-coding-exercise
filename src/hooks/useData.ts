@@ -25,5 +25,6 @@ export const useData = () => {
     data,
     loading: isFetching || mutation.isLoading,
     save: mutation.mutate,
+    status: mutation.status,
   }
 }

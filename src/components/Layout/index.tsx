@@ -1,4 +1,5 @@
 import { useState, MouseEvent } from 'react'
+import Link from 'next/link'
 import {
   AppBar,
   Box,
@@ -46,9 +47,23 @@ export const Layout = ({ children }: Props) => {
             ExpertzRUs
           </Typography>
         </Toolbar>
-        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          <MenuItem onClick={handleClose}>Provider</MenuItem>
-          <MenuItem onClick={handleClose}>Seeker</MenuItem>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          sx={{
+            a: {
+              textDecoration: 'none',
+              color: 'secondary.contrastText',
+            },
+          }}
+        >
+          <MenuItem onClick={handleClose}>
+            <Link href="/">Provider</Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link href="/seeker">Seeker</Link>
+          </MenuItem>
         </Menu>
       </AppBar>
       <Box mt="60px">{children}</Box>

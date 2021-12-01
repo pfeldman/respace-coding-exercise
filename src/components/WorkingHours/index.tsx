@@ -1,4 +1,5 @@
-import { Box, Checkbox, Typography } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { Box, Checkbox, Snackbar, Typography } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { PaperCard } from 'components/PaperCard'
 import { DayOfWeek } from 'components/WorkingHours/components/DayOfWeek'
@@ -7,28 +8,26 @@ import { TimeRange } from 'components/WorkingHours/components/TimeRange'
 import { PriceSelector } from 'components/WorkingHours/components/PriceSelector'
 import { useDefaultPricing } from 'hooks/useDefaultPricing'
 import { useData } from 'hooks/useData'
+import { SnackBarAction } from 'components/WorkingHours/components/SnackBarAction'
+import { DAYS_OF_WEEK, DAYS_WEEK_NAME } from 'resources/constants'
 
 export const WorkingHours = () => {
+  const [open, setOpen] = useState(false)
   const { workingHours, setWorkingHours } = useWorkingHours()
   const { defaultPrice } = useDefaultPricing()
-  const { save, loading } = useData()
+  const { save, loading, status } = useData()
 
-  const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-  const daysOfWeekName = [
-    'sunday',
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-  ]
+  useEffect(() => {
+    if (status === 'success') {
+      setOpen(true)
+    }
+  }, [status])
 
   const handleDayChange = (index: number, checked: boolean) => {
     if (checked) {
       setWorkingHours?.({
         ...workingHours,
-        [daysOfWeekName[index]]: [
+        [DAYS_WEEK_NAME[index]]: [
           {
             start: '8:00 am',
             end: '8:00 pm',
@@ -37,7 +36,7 @@ export const WorkingHours = () => {
       })
     } else {
       const newWorkingHours = { ...workingHours }
-      delete newWorkingHours?.[daysOfWeekName[index]]
+      delete newWorkingHours?.[DAYS_WEEK_NAME[index]]
       setWorkingHours?.(newWorkingHours)
     }
   }
@@ -102,6 +101,17 @@ export const WorkingHours = () => {
     setWorkingHours?.(newWorkingHours)
   }
 
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+
+    setOpen(false)
+  }
+
   return (
     <PaperCard size={8} title="Working Hours" isMain>
       <Box>
@@ -111,13 +121,13 @@ export const WorkingHours = () => {
             Please select which days and time are you available:
           </Typography>
           <Box>
-            {daysOfWeek.map((day, index) => {
+            {DAYS_OF_WEEK.map((day, index) => {
               return (
                 <Checkbox
                   sx={{
                     marginRight: '-10px',
                   }}
-                  checked={!!workingHours?.[daysOfWeekName[index]]}
+                  checked={!!workingHours?.[DAYS_WEEK_NAME[index]]}
                   onChange={(e) => handleDayChange(index, e.target.checked)}
                   key={`${day}${index}`}
                   icon={<DayOfWeek day={day} />}
@@ -128,7 +138,7 @@ export const WorkingHours = () => {
           </Box>
           <Box>
             <Box component="ul" sx={{ padding: 0 }}>
-              {daysOfWeekName.map((day) => {
+              {DAYS_WEEK_NAME.map((day) => {
                 if (!workingHours?.[day]) return null
 
                 return (
@@ -189,6 +199,13 @@ export const WorkingHours = () => {
             Save
           </LoadingButton>
         </Box>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Working Hours were saved"
+          action={<SnackBarAction handleClose={() => handleClose()} />}
+        />
       </Box>
     </PaperCard>
   )
