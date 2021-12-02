@@ -1,115 +1,71 @@
-import { Typography, Box, IconButton, Menu, MenuItem } from '@mui/material'
-import { TimeSelector } from './components/TimeSelector'
-import {
-  AddCircleOutline,
-  RemoveCircleOutline,
-  MoreVert,
-} from '@mui/icons-material'
+import { Typography, Box, IconButton } from '@mui/material'
 import { WorkingHours } from 'context'
-import { MouseEvent, useState } from 'react'
-import { PriceTextField } from 'components/PriceTextField'
+import {
+  AddCircleOutlineOutlined,
+  RemoveCircleOutlineOutlined,
+} from '@mui/icons-material'
+import { useWorkingHours } from 'hooks/useWorkingHours'
+import { TimeSelector } from 'components/WorkingHours/components/TimeRange/components/TimeSelector'
 
-interface Props extends WorkingHours {
-  onAdd: () => void
-  onChange: (start: string, end: string) => void
-  deletable: boolean
-  onRemove: () => void
-  onAddSpecialPrice: (value?: number) => void
-  specialPrice?: number
+interface Props {
+  timeRange: WorkingHours
+  day: string
+  index: number
+  isLast: boolean
+  total: number
 }
 
-export const TimeRange = ({
-  start,
-  end,
-  price,
-  onAdd,
-  onChange,
-  deletable,
-  onRemove,
-  onAddSpecialPrice,
-  specialPrice,
-}: Props) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
-
-  const handleToggle = (event?: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(anchorEl || !event ? null : event.currentTarget)
-  }
-
-  const handleClose = () => {
-    handleToggle()
-  }
+export const TimeRange = ({ timeRange, day, index, isLast, total }: Props) => {
+  const { handleRemove, handleAddTime } = useWorkingHours()
 
   return (
-    <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexGrow: '1',
-          alignItems: 'center',
-          ml: [0, 2],
-          '*': {
-            flexGrow: '1',
-          },
-        }}
-      >
-        <TimeSelector
-          value={start}
-          onChange={(start) => onChange(start, end)}
-        />
-        <Typography
-          sx={{
-            mx: '10px',
-          }}
-        >
-          To
-        </Typography>
-        <TimeSelector value={end} onChange={(end) => onChange(start, end)} />
-        <IconButton edge="start" sx={{ padding: 1, ml: 1 }} onClick={onAdd}>
-          <AddCircleOutline sx={{ color: 'primary.contrastText' }} />
-        </IconButton>
-        <IconButton
-          edge="start"
-          sx={{ padding: 1 }}
-          onClick={onRemove}
-          disabled={!deletable}
-        >
-          <RemoveCircleOutline
-            sx={{ color: deletable ? 'primary.contrastText' : 'primary.50' }}
-          />
-        </IconButton>
-        <IconButton edge="start" sx={{ padding: 0 }} onClick={handleToggle}>
-          <MoreVert sx={{ color: 'primary.contrastText' }} />
-        </IconButton>
-        <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-          <MenuItem onClick={() => onAddSpecialPrice()}>
-            Set a different price for this time range
-          </MenuItem>
-        </Menu>
-      </Box>
-      {price !== undefined && (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            '.MuiOutlinedInput-root': {
-              height: '30px',
-              fieldset: {
-                borderLeftWidth: 0,
-                borderRightWidth: 0,
-                borderTopWidth: 0,
-                borderRadius: 0,
+    <Box display="flex" justifyContent="flex-end" mr="-19px" mt="4px" mb="7px">
+      <Box display="flex" flexDirection="column" justifyContent="center">
+        <Box display="flex" alignItems="center">
+          <TimeSelector timeRange={timeRange} day={day} index={index} isStart />
+          <Typography fontSize="13px" color="primary.100" mx="9px" mt="-4px">
+            to
+          </Typography>
+          <TimeSelector timeRange={timeRange} day={day} index={index} />
+          <IconButton
+            onClick={() => handleRemove(day, index)}
+            sx={{
+              opacity: total > 1 ? '1' : '0',
+              ml: '-2px',
+              mt: '-4px',
+              svg: {
+                fill: '#B5B9C6',
+                width: '20px',
+                height: '20px',
               },
-            },
-          }}
-        >
-          <Typography sx={{ whiteSpace: 'nowrap' }}>Special Price</Typography>
-          <PriceTextField
-            value={specialPrice ? specialPrice.toString() : undefined}
-            onChange={(e) => onAddSpecialPrice(parseFloat(e.target.value))}
-          />
+            }}
+          >
+            <RemoveCircleOutlineOutlined />
+          </IconButton>
         </Box>
-      )}
+        {isLast && (
+          <Box
+            display="flex"
+            justifyContent="center"
+            pr="32px"
+            mt="-2px"
+            mb="-10px"
+          >
+            <IconButton
+              sx={{
+                svg: {
+                  fill: '#B5B9C6',
+                  marginTop: '-3px',
+                  width: '20px',
+                },
+              }}
+              onClick={() => handleAddTime(day, timeRange.end)}
+            >
+              <AddCircleOutlineOutlined />
+            </IconButton>
+          </Box>
+        )}
+      </Box>
     </Box>
   )
 }

@@ -1,5 +1,5 @@
 import { useDefaultPricing } from 'hooks/useDefaultPricing'
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { PriceTextField } from 'components/PriceTextField'
 
 export const PriceSelector = () => {
@@ -8,12 +8,9 @@ export const PriceSelector = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '10px',
+        mb: '45px',
       }}
     >
-      <Typography>Please enter the default hour rate:</Typography>
       <PriceTextField
         value={defaultPrice}
         onChange={(e) => setDefaultPrice?.(e.target.value)}
