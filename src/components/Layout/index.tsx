@@ -50,7 +50,7 @@ export const Layout = ({ children }: Props) => {
             boxSizing: 'border-box',
           }}
         >
-          <Image src="/img/logo.png" alt="logo" />
+          <Image width="192px" height="59" src="/img/logo.png" alt="logo" />
           <Button
             onClick={() => save()}
             variant="outlined"

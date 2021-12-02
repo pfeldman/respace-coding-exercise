@@ -88,10 +88,12 @@ export const WorkingHours = () => {
           <MinimumHourStay />
         </Box>
         <Box display="flex" mt="50px" alignItems="center" mb="50px">
-          <SectionTitle
-            title="Set a minimum amount of time required between reservations?"
-            special
-          />
+          <Box width={['200px', 'auto']}>
+            <SectionTitle
+              title="Set a minimum amount of time required between reservations?"
+              special
+            />
+          </Box>
           <MinimumAmountTime />
         </Box>
       </Box>
