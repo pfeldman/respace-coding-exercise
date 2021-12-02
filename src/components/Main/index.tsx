@@ -15,7 +15,15 @@ export const Main = ({ theme, Component, pageProps }: Props) => {
 
   const [workingHours, setWorkingHours] = useState<
     Record<string, WorkingHours[]>
-  >({})
+  >({
+    monday: [{ start: '6:00 am', end: '12:00 am' }],
+    tuesday: [{ start: '6:00 am', end: '12:00 am' }],
+    wednesday: [{ start: '6:00 am', end: '12:00 am' }],
+    thursday: [{ start: '6:00 am', end: '12:00 am' }],
+    friday: [{ start: '6:00 am', end: '12:00 am' }],
+    saturday: [{ start: '6:00 am', end: '12:00 am' }],
+    sunday: [{ start: '6:00 am', end: '12:00 am' }],
+  })
 
   const [defaultPrice, setDefaultPrice] = useState('10')
 
@@ -49,7 +57,7 @@ export const Main = ({ theme, Component, pageProps }: Props) => {
               />
               {/* eslint-disable-next-line */}
               <link
-                href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,700;0,900;1,400&display=swap"
+                href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;700;900&family=Roboto:ital,wght@0,300;0,500;0,700;0,900;1,400&display=swap"
                 rel="stylesheet"
               />
             </Head>
